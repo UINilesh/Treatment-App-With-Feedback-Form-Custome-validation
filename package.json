@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve && start gulp",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -23,6 +23,7 @@
     "angular-highcharts": "^9.0.11",
     "bootstrap": "^4.5.2",
     "font-awesome": "^4.7.0",
+    "gulp": "^4.0.2",
     "highcharts": "^8.2.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

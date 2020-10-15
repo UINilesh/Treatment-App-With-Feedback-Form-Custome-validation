@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="row">
+         
+            <div class="col-md-8 offset-md-2">
+                <div class="loginform">
+                    <div class="row">
+                    <div class="col-md-6">
+                        <p>Login In</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-right" routerLink="../signup">Sign Up</p>
+                    </div>
+                </div>
+                    <form [formGroup]="loginform" (ngSubmit)="loginAction()">
+                        <div class="form-group">
+                            <input autocomplete [ngClass]="{'is-invalid': submitted && f.username.errors}"
+                            #username formControlName="username" type="text" placeholder="Username" class="form-control">
+                           <div class="alert alert-danger" *ngIf="submitted && f.username.errors">
+                               <div *ngIf="f.username.errors.required">
+                                   Please enter username 
+                               </div>
+                               <div *ngIf="f.username.errors.minlength">
+                                   Please enter atleast 8 charectors
+                               </div>
+                               <div *ngIf="f.username.errors.maxlength">
+                                username should not be more than 10 charectors
+                            </div>
+                            
+                           </div>
+                        </div>
+                        
+                        <div class="col-md-12 text-right">
+                            <label class="pull-right check-box-text 
+                            text-link checkbox color-teal margin-top-0">
+                            <input #rememberMe (change)="toggleVisibility($event)" formControlName="rememberMe" type="checkbox"  class="remember-check">
+                            <span aria-label="Remember me"> Remember me</span></label>
+                            
+                        </div>
+                         
+                        <div class="form-group">
+                            <input autocomplete #password
+                             [ngClass]="{'is-invalid': submitted && f.password.errors}" formControlName="password" type="password" placeholder="Password" class="form-control">
+                           <div class="alert alert-danger" *ngIf="submitted && f.password.errors">
+                               <div  *ngIf="f.password.errors.required">
+                                   Please enter password
+                               </div>
+                               <div *ngIf="f.password.errors.minlength">
+                                   Please enter atleast 8 charectors
+                               </div>
+                           </div>
+                           
+                           
+                        </div>
+                        
+                        <div class="col-sm-12 text-right padding-bottom-20 padding-top-10">
+                             <a routerlink="" class="text-link">Forgot Password</a>
+                        </div>
+                         
+                        <div class="text-center loginbtn">
+                             <button type="submit" class="col-md-12 btn">Continue</button> 
+                        </div>
+                        Username : {{username.value}}  Password : {{password.value}}
+                    </form>
+               
+                </div>
+            </div>
+    </div>
+    </div>

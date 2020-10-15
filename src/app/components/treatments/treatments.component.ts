@@ -1,37 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MapChart } from 'angular-highcharts';
-import { forkJoin, of } from 'rxjs';
-import { catchError, delay } from 'rxjs/operators';
-import { TheVirusTracker } from '../../../shared/thevirustracker.model';
+import { Component, OnInit } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { MapChart } from "angular-highcharts";
+import { forkJoin, of } from "rxjs";
+import { catchError, delay } from "rxjs/operators";
+import { TheVirusTracker } from "../../../shared/thevirustracker.model";
 
-var Highcharts = require('highcharts/highmaps'),
-map = require('@highcharts/map-collection/custom/world.geo.json');
-
+var Highcharts = require("highcharts/highmaps"),
+  map = require("@highcharts/map-collection/custom/world.geo.json");
 
 @Component({
-  selector: 'app-treatments',
-  templateUrl: './treatments.component.html',
-  styleUrls: ['./treatments.component.css']
+  selector: "app-treatments",
+  templateUrl: "./treatments.component.html",
+  styleUrls: ["./treatments.component.css"],
 })
-
 export class TreatmentsComponent implements OnInit {
-
-
   arrayOfHttp = [];
   chartData = [];
   globalData = [];
   isLoading: boolean = false;
 
-
-  constructor(public http:HttpClient, public mapChart: MapChart) { }
+  constructor(public http: HttpClient, public mapChart: MapChart) {}
 
   ngOnInit() {
     this.prepapareChat();
-    this.getdata();  
+    this.getdata();
   }
- 
-  
+
   prepapareChat() {
     this.mapChart = new MapChart({
       chart: {
@@ -42,9 +36,9 @@ export class TreatmentsComponent implements OnInit {
           linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
           stops: [
             [0, "#4a0000"],
-            [1, "#000000"]
-          ]
-        }
+            [1, "#000000"],
+          ],
+        },
       },
 
       title: {
@@ -52,24 +46,25 @@ export class TreatmentsComponent implements OnInit {
         style: {
           color: "#fff",
           fontWeight: "bold",
-          fontSize: "20px"
-        }
+          fontSize: "20px",
+        },
       },
 
       subtitle: {
-        text: "Hover on a country or territory to see casses, deaths and recoveries.",
+        text:
+          "Hover on a country or territory to see casses, deaths and recoveries.",
         style: {
           color: "white",
           fontSize: "1em",
-          opacity: 0.8
-        }
+          opacity: 0.8,
+        },
       },
 
       mapNavigation: {
         enabled: true,
         buttonOptions: {
-          verticalAlign: "top"
-        }
+          verticalAlign: "top",
+        },
       },
 
       colorAxis: {
@@ -77,32 +72,38 @@ export class TreatmentsComponent implements OnInit {
           {
             from: 0,
             to: 0,
-            color: "#FBEFEF"
-          }, {
+            color: "#FBEFEF",
+          },
+          {
             from: 1,
             to: 100,
-            color: "#FA5858"
-          }, {
+            color: "#FA5858",
+          },
+          {
             from: 101,
             to: 1000,
-            color: "#500000"
-          }, {
+            color: "#500000",
+          },
+          {
             from: 1001,
             to: 10000,
-            color: "#880000"
-          }, {
+            color: "#880000",
+          },
+          {
             from: 10001,
             to: 20000,
-            color: "#b10000"
-          }, {
+            color: "#b10000",
+          },
+          {
             from: 20001,
             to: 50000,
-            color: "#FE2E2E"
-          }, {
+            color: "#FE2E2E",
+          },
+          {
             from: 50001,
-            color: "#ff0000"
-          }
-        ]
+            color: "#ff0000",
+          },
+        ],
       },
 
       series: [
@@ -110,14 +111,14 @@ export class TreatmentsComponent implements OnInit {
           type: undefined,
           name: "Disease",
           animation: {
-            duration: 2000
+            duration: 2000,
           },
           borderColor: "#FFDF00",
           joinBy: ["iso-a3", "code3"],
           data: this.chartData,
           dataLabels: {
             enabled: false,
-            format: "{point.name}"
+            format: "{point.name}",
           },
           minSize: 4,
           maxSize: "40%",
@@ -129,29 +130,30 @@ export class TreatmentsComponent implements OnInit {
                   <br /> Total Recovered : {point.total_recovered}
                   <br /> New Cases Today : <b>+ {point.total_new_cases_today}
       
-                  `
-          }
-        }
-      ]
+                  `,
+          },
+        },
+      ],
     });
   }
-  
-  getdata(){
-   map.features.forEach(element => {
+
+  getdata() {
+    map.features.forEach((element) => {
       this.arrayOfHttp.push(
-        this.http.get<TheVirusTracker>(
-          `https://cors-anywhere.herokuapp.com/https://thevirustracker.com/free-api?countryTotal=${element.id}`
-        )
-          .pipe(catchError(error => of(error)))
+        this.http
+          .get<TheVirusTracker>(
+            `https://cors-anywhere.herokuapp.com/https://thevirustracker.com/free-api?countryTotal=${element.id}`
+          )
+          .pipe(catchError((error) => of(error)))
       );
     });
 
-    forkJoin(this.arrayOfHttp).subscribe(results => {
-      results.forEach(data => {
+    forkJoin(this.arrayOfHttp).subscribe((results) => {
+      results.forEach((data) => {
         if (data["countrydata"]) {
           this.chartData.push({
             code3: map.features.filter(
-              x => x.id == data["countrydata"][0].info.code
+              (x) => x.id == data["countrydata"][0].info.code
             )[0].properties["iso-a3"],
             name: data["countrydata"][0].info.title,
             value: data["countrydata"][0].total_cases,
@@ -160,7 +162,8 @@ export class TreatmentsComponent implements OnInit {
             total_deaths: data["countrydata"][0].total_deaths,
             total_recovered: data["countrydata"][0].total_recovered,
             total_new_cases_today: data["countrydata"][0].total_new_cases_today,
-            total_new_deaths_today: data["countrydata"][0].total_new_deaths_today
+            total_new_deaths_today:
+              data["countrydata"][0].total_new_deaths_today,
           });
         }
       });
@@ -168,17 +171,17 @@ export class TreatmentsComponent implements OnInit {
     });
 
     this.http
-      .get<TheVirusTracker>("https://cors-anywhere.herokuapp.com/https://thevirustracker.com/free-api?global=stats")
-      .subscribe(data => {
+      .get<TheVirusTracker>(
+        "https://cors-anywhere.herokuapp.com/https://thevirustracker.com/free-api?global=stats"
+      )
+      .subscribe((data) => {
         this.globalData.push({
           total_active_cases: data["results"][0].total_active_cases,
           total_cases: data["results"][0].total_cases,
           total_deaths: data["results"][0].total_deaths,
           total_new_cases_today: data["results"][0].total_new_cases_today,
-          total_new_deaths_today: data["results"][0].total_new_deaths_today
+          total_new_deaths_today: data["results"][0].total_new_deaths_today,
         });
       });
   }
-  
-
 }

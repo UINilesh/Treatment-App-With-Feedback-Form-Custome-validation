@@ -13,6 +13,9 @@ import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { ThankComponent } from './components/thank/thank.component';
+import { LoginComponent } from './westernUnion/login/login.component';
+import { SignupComponent } from './westernUnion/signup/signup.component';
+import { ForgotPasswordComponent } from './westernUnion/forgot-password/forgot-password.component';
 
 
 export function highchartsModules() {
@@ -26,7 +29,10 @@ export function highchartsModules() {
     TreatmentsComponent,
     HeaderComponent,
     FooterComponent,
-    ThankComponent
+    ThankComponent,
+    LoginComponent,
+    SignupComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
